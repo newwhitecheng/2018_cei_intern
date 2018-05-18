@@ -62,7 +62,13 @@ CLASSES = ('__background__',
     'whale','wine bottle','zebra')
 
 NETS = {'ResNet-50': ('ResNet-50',
-                  'resnet50_rfcn_ohem_iter_50000.caffemodel')}
+                  'resnet50_rfcn_ohem_iter_100001.caffemodel'),
+'GoogleNet': ('GoogleNet',
+                  'GoogleNet_rfcn_ohem_iter_230000.caffemodel'),
+'CaffeNet': ('CaffeNet',
+                  'CaffeNet_rfcn_ohem_iter_10000.caffemodel')
+
+}
 
 
 def vis_detections(im, class_name, dets, thresh=0.5):
@@ -134,7 +140,7 @@ def parse_args():
                         help='Use CPU mode (overrides --gpu)',
                         action='store_true')
     parser.add_argument('--net', dest='demo_net', help='Network to use [ResNet-101]',
-                        choices=NETS.keys(), default='ResNet-50')
+                        choices=NETS.keys(), default='CaffeNet')
 
     args = parser.parse_args()
 
@@ -147,8 +153,8 @@ if __name__ == '__main__':
 
     prototxt = os.path.join(cfg.MODELS_DIR, NETS[args.demo_net][0],
                             'rfcn_end2end', 'test_agnostic.prototxt')
-    caffemodel = os.path.join(cfg.OUTPUT_DIR, 'rfcn_end2end_ohem','DET_train',
-                        'resnet50_rfcn_ohem_iter_50000.caffemodel')
+    caffemodel = os.path.join(cfg.DATA_DIR, 'imagenet_models',
+                              NETS[args.demo_net][1]) 
     #pdb.set_trace()
 
     if not os.path.isfile(caffemodel):

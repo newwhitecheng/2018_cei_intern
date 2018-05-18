@@ -25,7 +25,7 @@ import numpy as np
 import scipy.io as sio
 import caffe, os, sys, cv2
 import argparse
-test_path = '/home/hsc38/workspace/LPIRC/py-R-FCN/referee/images/1'
+test_path = '/home/nvidia/workspace/LPIRC/client/images/1'
 CLASSES = ('__background__','1', '2', '3','4', '5', '6', '7', '8','9', '10', '11', '12','13', '14', '15','16', '17', '18', '19','20')
 
 #NETS = {'ResNet-101': ('ResNet-101',
@@ -33,8 +33,8 @@ CLASSES = ('__background__','1', '2', '3','4', '5', '6', '7', '8','9', '10', '11
 #        'ResNet-50': ('ResNet-50',
 #                'resnet50_rfcn_final.caffemodel')}
 cfg.TEST.HAS_RPN = True  # Use RPN for proposals
-prototxt = os.path.join(cfg.voc_MODELS_DIR, 'ResNet-50','rfcn_end2end', 'test_agnostic.prototxt')
-caffemodel = os.path.join(cfg.DATA_DIR, 'rfcn_models','resnet50_rfcn_final.caffemodel')
+prototxt = os.path.join(cfg.MODELS_DIR, 'ResNet-50','rfcn_end2end', 'test_agnostic.prototxt')
+caffemodel = os.path.join(cfg.DATA_DIR, 'imagenet_models','resnet50_rfcn_ohem_iter_100001.caffemodel')
 if not os.path.isfile(caffemodel):
     raise IOError(('{:s} not found.\n').format(caffemodel))
 
@@ -50,11 +50,11 @@ print '\n\nLoaded network {:s}'.format(caffemodel)
   #  for i in xrange(2):
   #      _, _= im_detect(net, im)
 
-  #  for im_name in os.listdir(test_path):
-  #  #for im_name in os.listdir(filenames):
-  #      print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-  #      print 'test for data {}'.format(im_name)
-  #      demo(net, im_name)
+#for im_name in os.listdir(filenames):
+for im_name in os.listdir(test_path):  
+	print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+	print 'test for data {}'.format(im_name)
+	demo(net, im_name)
     
 def vis_detections(im, class_name, dets, image_name, thresh=0.5 ):
     """Draw detected bounding boxes."""
