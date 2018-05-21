@@ -1,0 +1,18 @@
+Readme:
+To run the test file:
+
+Step 1:
+Cuda and cudnn need to be installed on the platform.
+
+Step 2:
+From line 18 to line 21, set the input and output structure.
+From line 24 to line 25, set the input_blob and output_blob name as the name of the input and output in the .prototxt file.
+In line 26, set the directory of the model file and the prototxt file.
+
+Step 3:
+In the main function:
+Set N as batch size, which should be the same with the one in the .prototxt file
+In line 124, set the file name of the .caffemodel file and the .prototxt file.
+
+Line 155 and line 157 is for testing the time of doing inference for N images.
+From line 164 to line 167 is to print the result of the inference.
