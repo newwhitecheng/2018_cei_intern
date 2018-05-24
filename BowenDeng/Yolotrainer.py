@@ -25,16 +25,16 @@ class Loss(nn.Module):
 
     def __init__(self):
         super(Loss, self).__init__()
-        self.loss = 0
+        self.loss = None
 
-    def forward(self, prediction, label, lamda_obj=5, lamda_noobj=0.5):
+    def forward(self, prediction, label):
         indexer = torch.from_numpy(np.argsort(prediction.cpu.numpy()[:, 0]))
         prediction = prediction[indexer]
         row_label = label[0]
         # 假设label_name是class index
         label_name = []
         batch_id = -1
-        self.loss = 0
+        self.loss = torch.autograd.Variable(torch.FloatTensor([0]))
         for row in range(prediction.size(0)):
             if batch_id != prediction[row][0]:
                 batch_id = prediction[row][0]
