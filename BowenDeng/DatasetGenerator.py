@@ -1,17 +1,72 @@
 import torch
 import os
+import random
 from PIL import Image
 from xml.dom.minidom import parse as parse
-
 from torch.utils.data import Dataset
+
+
+def distort_image(im, hue, sat, val):
+    im = im.convert('HSV')
+    cs = list(im.split())
+    cs[1] = cs[1].point(lambda i: i * sat)
+    cs[2] = cs[2].point(lambda i: i * val)
+
+    def change_hue(x):
+        x += hue * 255
+        if x > 255:
+            x -= 255
+        if x < 0:
+            x += 255
+        return x
+
+    cs[0] = cs[0].point(change_hue)
+    im = Image.merge(im.mode, tuple(cs))
+
+    im = im.convert('RGB')
+    # constrain_image(im)
+    return im
+
+
+def rand_scale(s):
+    scale = random.uniform(1, s)
+    if random.randint(1, 10000) % 2:
+        return scale
+    return 1. / scale
+
+
+def random_distort_image(im, hue, saturation, exposure):
+    dhue = random.uniform(-hue, hue)
+    dsat = rand_scale(saturation)
+    dexp = rand_scale(exposure)
+    res = distort_image(im, dhue, dsat, dexp)
+    return res
+
+
+def data_augmentation(img, shape, hue, saturation, exposure):
+    flip = random.randint(1, 10000) % 2
+    sized = img.resize(shape)
+    if flip:
+        sized = sized.transpose(Image.FLIP_LEFT_RIGHT)
+    img = random_distort_image(sized, hue, saturation, exposure)
+    return img
 
 
 class DatasetGenerator(Dataset):
 
-    # --------------------------------------------------------------------------------
-
-    def __init__(self, pathImageDirectory, path_image, path_imagefile, path_bndboxfile, transform):
-
+    def __init__(self, path_image, path_imagefile, path_bndboxfile, transform):
+        """
+            fetch the data and labels
+            :param path_image: path to the dir containing the images
+            :param path_imagefile: path to the dir of image files, i.e., *.txt
+            :param path_bndboxfile: path to the dir of bb files, i.e, *.xml
+            :param transform: flag for using data argumentation or not
+        """
+        # -------------------- DATA ARGUMENT
+        self.shape = 446
+        self.hue = 0.1
+        self.saturation = 1.5
+        self.exposure = 1.5
         self.imagelist = []
         self.labellist = []
         self.transform = transform
@@ -52,10 +107,9 @@ class DatasetGenerator(Dataset):
     def __getitem__(self, index):
         image_path = self.imagelist[index]
         image_data = Image.open(image_path)
-        image_label = torch.LongTensor(self.labellist[index])
-        if self.transform is not None:
-            image_data = self.transform(image_data)
-
+        image_label = torch.LongTensor([int(x) for x in self.labellist[index]])
+        if self.transform:
+            image_data = data_augmentation(image_data, self.shape, self.hue, self.saturation, self.exposure)
         return image_data, image_label
 
     # --------------------------------------------------------------------------------
