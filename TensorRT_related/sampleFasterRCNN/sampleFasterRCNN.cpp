@@ -519,7 +519,6 @@ int main(int argc, char** argv)
 	//srand(unsigned(time(nullptr)));
 	// available images 
         //std::vector<std::string> imageList = { "000456.ppm",  "000542.ppm",  "001150.ppm", "001763.ppm", "004545.ppm" };
-	//std::vector<std::string> imageList = {"LPIRC2018_test_00000001.ppm","LPIRC2018_test_00000002.ppm","LPIRC2018_test_00000003.ppm","LPIRC2018_test_00000004.ppm","LPIRC2018_test_00000005.ppm"};
 //	std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018");
         std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018");
         std::sort(imageList.begin(),imageList.end());
@@ -619,6 +618,9 @@ int main(int argc, char** argv)
 				        BBox b{ bbox[idx*OUTPUT_BBOX_SIZE + c * 4], bbox[idx*OUTPUT_BBOX_SIZE + c * 4 + 1], bbox[idx*OUTPUT_BBOX_SIZE + c * 4 + 2], bbox[idx*OUTPUT_BBOX_SIZE + c * 4 + 3] };
                                     std::cout  << ppms[i].fileName << " " << c <<  " " <<  scores[idx*OUTPUT_CLS_SIZE + c]  <<  " " << b.x1*ppms[i].w/224  << " " <<  b.y1*ppms[i].h/224 << " " <<  b.x2*ppms[i].w/224 << " " <<  b.y2*ppms[i].h/224 << std::endl;
 				        //writePPMFileWithBBox(storeName, ppms[i], b);
+					std::ofstream result_file;
+                                        result_file.open("submission.csv", std::ios_base::app);
+                                        result_file << ppms[i].fileName << " " << c <<  " " <<  scores[idx*OUTPUT_CLS_SIZE + c]  <<  " " << b.x1*ppms[i].w/224  << " " <<  b.y1*ppms[i].h/224 << " " <<  b.x2*ppms[i].w/224 << " " <<  b.y2*ppms[i].h/224 << std::endl;
 
 			        }
 		        }
