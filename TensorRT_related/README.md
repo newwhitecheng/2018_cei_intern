@@ -4,7 +4,7 @@ The following instruction shows you how to run our submission executable file.
     ```Shell
     ssh nvidia@10.236.176.251
     ```
-2. change director and run
+2. change directory and run
     ```Shell
     cd /home/nvidia/workspace/TensorRT-3.0.4/bin
     ./sample_fasterRCNN
