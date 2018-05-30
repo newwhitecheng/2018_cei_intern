@@ -1,3 +1,20 @@
+# How to run
+The follow is the instruction of running our submission executable file.
+1. log in to one of the tx2
+    ```Shell
+    ssh nvidia@10.236.176.251
+    ```
+2. change director and run
+    ```Shell
+    cd /home/nvidia/workspace/TensorRT-3.0.4/bin
+    ./sample_fasterRCNN
+    ```
+3. The result will be named submission.csv at the same directory
+    ```Shell
+    ls 
+    ```
+    you will see submission.csv
+
 # Troubleshooting
 This file record the tensorRT (trt)errors and bugs that we've met. The purpose of this file is to provide a simple solution that worked for us and would probably work for you. 
 
