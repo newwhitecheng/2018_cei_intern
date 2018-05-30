@@ -22,7 +22,8 @@ This file record the tensorRT (trt)errors and bugs that we've met. The purpose o
 
    **Note:** you might meet the above error. It's because you did not include the targets library to PATH.
     ```Shell
-    # solution
+    # solution: export the target library
+    # for example 
     export LD_LIBRARY_PATH=/home/hc218/workspace/TensorRT-4.0.0.3/targets/x86_64-linux-gnu/lib:$PATH
     ```
    
@@ -30,7 +31,8 @@ This file record the tensorRT (trt)errors and bugs that we've met. The purpose o
 
    **Note:** you might meet the above error. It's because you did not include `cuda/lib64`.
     ```Shell
-    # solution
+    # solution: export the cuda lib64 path
+    # for example:
     export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
     ```
    
