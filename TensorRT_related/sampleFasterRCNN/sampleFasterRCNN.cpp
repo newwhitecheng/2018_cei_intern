@@ -16,8 +16,12 @@
 #include <vector>
 #include <unistd.h>  
 #include <dirent.h>       
+#include "opencv/cv.h"
+#include "opencv/highgui.h"
 #include <stdio.h>           
+#include "opencv2/opencv.hpp"
 #include "opencv2/core.hpp"
+#include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui.hpp"   
 #include "NvCaffeParser.h"
@@ -73,12 +77,19 @@ struct BBox
 	float x1, y1, x2, y2;
 };
 
+std::string locateFile(const std::string& input)
+{
+    std::vector<std::string> dirs{"data/samples/faster-rcnn/", "data/faster-rcnn/","/home/nvidia/workspace/Images_2018_ppm_reshape/","/home/nvidia/workspace/Images_2018/","/home/nvidia/workspace/Images_2018_reshape/"};
+    return locateFile(input, dirs);
+}
 void jpg2ppm(const std::string& filename, PPM& ppm)
 {
  ppm.fileName = filename;
  cv::Mat jpg;
- std::string imageinput = filepath+filename;
- cv::Mat rawjpg = cv::imread(imageinput, -1);
+ //std::ifstream infile(locateFile(filename), std::ifstream::binary);
+ //std::string imageinput = filepath+filename;
+ //cv::Mat rawjpg = imread(imageinput, -1);
+ cv::Mat rawjpg = imread(locateFile(filename), -1);
  ppm.h = rawjpg.rows;
  ppm.w = rawjpg.cols;
  cv::resize(rawjpg, jpg, cv::Size(224, 224));
@@ -94,11 +105,7 @@ void jpg2ppm(const std::string& filename, PPM& ppm)
  return;
 }
 
-std::string locateFile(const std::string& input)
-{
-    std::vector<std::string> dirs{"data/samples/faster-rcnn/", "data/faster-rcnn/","/home/nvidia/workspace/Images_2018_ppm_reshape/","/home/nvidia/workspace/Images_2018/","/home/nvidia/workspace/Images_2018_reshape/"};
-    return locateFile(input, dirs);
-}
+
 
 // simple PPM (portable pixel map) reader
 void readPPMFile(const std::string& filename, PPM& ppm)
@@ -514,7 +521,10 @@ int main(int argc, char** argv)
         //std::vector<std::string> imageList = { "000456.ppm",  "000542.ppm",  "001150.ppm", "001763.ppm", "004545.ppm" };
 	//std::vector<std::string> imageList = {"LPIRC2018_test_00000001.ppm","LPIRC2018_test_00000002.ppm","LPIRC2018_test_00000003.ppm","LPIRC2018_test_00000004.ppm","LPIRC2018_test_00000005.ppm"};
 //	std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018");
-        std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018_ppm_reshape");
+        std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018");
+        std::sort(imageList.begin(),imageList.end());
+        //for(int i=0;i<imageList.size();i++)
+        	//cout<<imageList[i]<<endl;
         std::vector<PPM> ppms(N);
         // deserialize the engine 
 	IRuntime* runtime = createInferRuntime(gLogger);
@@ -529,7 +539,8 @@ int main(int argc, char** argv)
         {
                 for (int i = 0; i < N; ++i)
 	        {
-		        readPPMFile(imageList[i+pn], ppms[i]);
+		        //readPPMFile(imageList[i+pn], ppms[i]);
+		        jpg2ppm(imageList[i+pn], ppms[i]);
 		        imInfo[i * 3] = float(ppms[i].h);   // number of rows
 		        imInfo[i * 3 + 1] = float(ppms[i].w); // number of columns
 		        imInfo[i * 3 + 2] = 1;         // image scale
@@ -606,7 +617,7 @@ int main(int argc, char** argv)
 					//<< " (Result stored in " << storeName << ")." << std::endl;
 
 				        BBox b{ bbox[idx*OUTPUT_BBOX_SIZE + c * 4], bbox[idx*OUTPUT_BBOX_SIZE + c * 4 + 1], bbox[idx*OUTPUT_BBOX_SIZE + c * 4 + 2], bbox[idx*OUTPUT_BBOX_SIZE + c * 4 + 3] };
-                                    std::cout  << ppms[i].fileName << " " << c <<  " " <<  scores[idx*OUTPUT_CLS_SIZE + c]  <<  " " << b.x1  << " " <<  b.y1 << " " <<  b.x2 << " " <<  b.y2 << std::endl;
+                                    std::cout  << ppms[i].fileName << " " << c <<  " " <<  scores[idx*OUTPUT_CLS_SIZE + c]  <<  " " << b.x1*ppms[i].w/224  << " " <<  b.y1*ppms[i].h/224 << " " <<  b.x2*ppms[i].w/224 << " " <<  b.y2*ppms[i].h/224 << std::endl;
 				        //writePPMFileWithBBox(storeName, ppms[i], b);
 
 			        }
