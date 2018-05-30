@@ -1,5 +1,5 @@
 # How to run
-The follow is the instruction of running our submission executable file.
+The following instruction shows you how to run our submission executable file.
 1. log in to one of the tx2
     ```Shell
     ssh nvidia@10.236.176.251
