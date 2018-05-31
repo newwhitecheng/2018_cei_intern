@@ -107,7 +107,7 @@ void jpg2ppm(const std::string& filename, PPM& ppm, vector<double> &image_scale)
 	int target_size = TEST_SCALES;
 
 	double im_scale = static_cast<double> (target_size) / static_cast<double> (im_size_min);
-	if (ceil(im_scale * im_size_max) > TEST_MAX_SIZE)
+	if (round(im_scale * im_size_max) > TEST_MAX_SIZE)
 		im_scale = static_cast<double> (TEST_MAX_SIZE) / static_cast<double> (im_size_max);
 	cv::resize(rawjpg, jpg, cv::Size(), im_scale, im_scale, cv::INTER_LINEAR);
 	image_scale.push_back(jpg.cols);
