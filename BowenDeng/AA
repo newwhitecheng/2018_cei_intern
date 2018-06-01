@@ -226,9 +226,10 @@ char f(int i)
 int main()
 {
 	char name[] = "D://BaiduYunDownload/ILSVRC2013_DET_val/ILSVRC2013_val_00000001.JPEG";
-	for (int i = 1; i < 4599; ++i)
+	for (int i = 1000; i < 4599; ++i)
 	{
-		name[60] = f(i / 100);
+		name[59] = f(i / 1000);
+		name[60] = f((i / 100) % 10);
 		name[61] = f((i / 10) % 10);
 		name[62] = f(i % 10);
 		//int i = 2;
