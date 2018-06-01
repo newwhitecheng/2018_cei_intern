@@ -77,25 +77,10 @@ image ipl_to_image(IplImage* src)
 	out.step = src->widthStep;
 	return out;
 }
-void image_into_ipl(image im, IplImage* dst)
+void image_into_ipl( image im, IplImage* dst)
 {
 
-	unsigned char *data = (unsigned char *)dst->imageData;
-	dst->height = im.h;
-	dst->width = im.w;
-	dst->nChannels = im.c;
-	dst->widthStep = 3 * 224;
-	int i, j, k;
-	for (i = 0; i < im.h; ++i)
-	{
-		for ( k = 0; k < im.c; ++k)
-		{
-			for (j = 0; j < im.w; ++j)
-			{
-				data[i * 3 * 224 + j * im.c + k] = im.data[k * im.w * im.h + i * im.w + j] * 255;
-			}
-		}
-	}
+	
 }
 static float get_pixel(image m, int x, int y, int c)
 {
@@ -184,8 +169,7 @@ void foo(int i, const char* filename, PPM& ppm)
 		//for (k = 0; k < c; ++k) {
 			//for (j = 0; j < w; ++j) {
 				//im.data[k*w*h + i*w + j] = data[i*step + j*c + k] / 255.;
-	image_into_ipl(tt, imgSrc);
-	Mat  mat = cvarrToMat(imgSrc);
+	//Mat  mat = cvarrToMat(imgSrc);
 //	for (int j = 0; j< 224; j++) {
 		//for (int i = 0; i< 224; i++)
 		//{
@@ -195,8 +179,26 @@ void foo(int i, const char* filename, PPM& ppm)
 		//}
 	//}
 	//}
-	 imshow("a", mat);
-	 waitKey();
+	imgSrc->imageData = (char*)calloc(224 * 224 * 3, sizeof( char));
+	imgSrc->height = tt.h;
+	imgSrc->width = tt.w;
+	imgSrc->nChannels = tt.c;
+	imgSrc->widthStep = 3 * 224;
+	int m, j, k;
+	for (m = 0; m < tt.h; ++m)
+	{
+		for (k = 0; k < tt.c; ++k)
+		{
+			for (j = 0; j < tt.w; ++j)
+			{
+				imgSrc->imageData[m * 3 * 224 + j * tt.c + k] = tt.data[k * tt.w * tt.h + m * tt.w + j] * 255;
+			}
+		}
+	}
+	Mat  mat = cvarrToMat(imgSrc);
+	free(imgSrc->imageData);
+	cout << i << endl;
+	
 }
 char f(int i)
 {
@@ -224,7 +226,7 @@ char f(int i)
 int main()
 {
 	char name[] = "D://BaiduYunDownload/ILSVRC2013_DET_val/ILSVRC2013_val_00000001.JPEG";
-	for (int i = 1; i < 999; ++i)
+	for (int i = 1; i < 4599; ++i)
 	{
 		name[60] = f(i / 100);
 		name[61] = f((i / 10) % 10);
