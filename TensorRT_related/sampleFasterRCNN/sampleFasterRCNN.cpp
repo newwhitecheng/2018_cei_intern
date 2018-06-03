@@ -503,38 +503,59 @@ std::vector<int> nms(std::vector<std::pair<float, int> >& score_index, float* bb
 
 int main(int argc, char** argv)
 {
-	// create a GIE model from the caffe model and serialize it to a stream
-	PluginFactory pluginFactory;
-	IHostMemory *gieModelStream{ nullptr };
-	// batch size
-	const int N = 1;
-        const int M = 200;
-	caffeToGIEModel("faster_rcnn_test_iplugin.prototxt",
+		// create a GIE model from the caffe model and serialize it to a stream
+		PluginFactory pluginFactory;
+		IHostMemory *gieModelStream{ nullptr };
+		// batch size
+		const int N = 1;
+        const int M = 20000;
+		/*char *cache_path = "/home/fanzc/TensorRT-3.0.4 (2)/data/faster-rcnn/engine";
+		std::stringstream searilizedengine;*/
+		caffeToGIEModel("faster_rcnn_test_iplugin.prototxt",
 		"vgg16_faster_rcnn_iter_80000.caffemodel",
 		std::vector < std::string > { OUTPUT_BLOB_NAME0, OUTPUT_BLOB_NAME1, OUTPUT_BLOB_NAME2 },
 		N, &pluginFactory, &gieModelStream);
 
-	pluginFactory.destroyPlugin();
-	// read a random sample image
-	//srand(unsigned(time(nullptr)));
-	// available images 
-        //std::vector<std::string> imageList = { "000456.ppm",  "000542.ppm",  "001150.ppm", "001763.ppm", "004545.ppm" };
-//	std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018");
-        std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018");
+		pluginFactory.destroyPlugin();
+    	std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018");
+        //std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/ILSVRC2013_DET_val2");
         std::sort(imageList.begin(),imageList.end());
-        //for(int i=0;i<imageList.size();i++)
-        	//cout<<imageList[i]<<endl;
         std::vector<PPM> ppms(N);
         // deserialize the engine 
-	IRuntime* runtime = createInferRuntime(gLogger);
-	ICudaEngine* engine = runtime->deserializeCudaEngine(gieModelStream->data(), gieModelStream->size(), &pluginFactory);
+		IRuntime* runtime = createInferRuntime(gLogger);
+		/*searilizedengine.write((const char*)gieModelStream->data(), gieModelStream->size());
+		std::ofstream outfile;
+		outfile.open(cache_path);
+		outfile << searilizedengine.rdbuf();
+		outfile.close();*/
+		ICudaEngine* engine = runtime->deserializeCudaEngine(gieModelStream->data(), gieModelStream->size(), &pluginFactory);
+/*
+char *cache_path = "/home/fanzc/TensorRT-3.0.4 (2)/data/faster-rcnn/engine";
+std::ifstream cache(cache_path);
+std:stringstream giemodelstream;
+giemodelstream.seekg(0,giemodelstream.beg);
+giemodelstream<<cache.rdbuf();
+giemodelstream.seekg(0,giemodelstream.end);
+const int modelsize = giemodelstream.tellg();
+giemodelstream.seekg(0,giemodelstream.beg);
+char* modelmem = malloc(modelsize);
+giemodelstream.read(modelmem,modelsize);
+ICudaEngine* engine = runtime->deserializeCudaEngine(modelmem, modelsize, &pluginFactory);
+*/
+		IExecutionContext *context = engine->createExecutionContext();
+		float* data = new float[N*INPUT_C*INPUT_H*INPUT_W];
+	 // host memory for outputs 
+        float* rois = new float[N * nmsMaxOut * 4];
+        float* bboxPreds = new float[N * nmsMaxOut * OUTPUT_BBOX_SIZE];
+        float* clsProbs = new float[N * nmsMaxOut * OUTPUT_CLS_SIZE];
 
-	IExecutionContext *context = engine->createExecutionContext();
+         // predicted bounding boxes
+        float* predBBoxes = new float[N * nmsMaxOut * OUTPUT_BBOX_SIZE];
 
-	float imInfo[N * 3]; // input im_info	
-	//std::random_shuffle(imageList.begin(), imageList.end(), [](int i) {return rand() % i; });
-	assert(ppms.size() <= imageList.size());
-	for(int pn = 0; pn<M; ++pn)
+		float imInfo[N * 3]; // input im_info	
+		//std::random_shuffle(imageList.begin(), imageList.end(), [](int i) {return rand() % i; });
+		assert(ppms.size() <= imageList.size());
+		for(int pn = 0; pn<M; ++pn)
         {
                 for (int i = 0; i < N; ++i)
 	        {
@@ -545,7 +566,6 @@ int main(int argc, char** argv)
 		        imInfo[i * 3 + 2] = 1;         // image scale
 	        }
                 
-	        float* data = new float[N*INPUT_C*INPUT_H*INPUT_W];
 	        // pixel mean used by the Faster R-CNN's author
 	        float pixelMean[3]{ 102.9801f, 115.9465f, 122.7717f }; // also in BGR order
 	        for (int i = 0, volImg = INPUT_C*INPUT_H*INPUT_W; i < N; ++i)
@@ -558,14 +578,6 @@ int main(int argc, char** argv)
 		        }
 	        }
 
-
-	        // host memory for outputs 
-	        float* rois = new float[N * nmsMaxOut * 4];
-	        float* bboxPreds = new float[N * nmsMaxOut * OUTPUT_BBOX_SIZE];
-        	float* clsProbs = new float[N * nmsMaxOut * OUTPUT_CLS_SIZE];
-
-        	// predicted bounding boxes
-        	float* predBBoxes = new float[N * nmsMaxOut * OUTPUT_BBOX_SIZE];
 
         	// run inference
         	doInference(*context, data, imInfo, bboxPreds, clsProbs, rois, N);
