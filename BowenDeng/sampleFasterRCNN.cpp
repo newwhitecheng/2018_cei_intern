@@ -226,6 +226,7 @@ void jpg2ppm(const std::string& filename, PPM& ppm)
 	image resized = resize_image(tmp, INPUT_H,  INPUT_W);
 	if (imgSrc->height * imgSrc->width < INPUT_H * INPUT_W)
 	{
+		cvReleaseData(imgSrc);
 		imgSrc->imageData = (char*)calloc(INPUT_H * INPUT_W * INPUT_C, sizeof(char));
 		new_memory = 1;
 	}
@@ -256,8 +257,9 @@ void jpg2ppm(const std::string& filename, PPM& ppm)
 	}
 	if (new_memory == 1)
 		free(imgSrc->imageData);
-    free_image(tmp);
+        free_image(tmp);
 	free_image(resized);
+	cvReleaseImage(imgSrc);
 	return;
 }
 
