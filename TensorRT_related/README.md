@@ -55,7 +55,24 @@ This file record the tensorRT (trt)errors and bugs that we've met. The purpose o
     nvidia@10.236.176.251:/home/nvidia/workspace/TensorRT-3.0.4/data/faster-rcnn
     ```
  # TODO
+ - [ ] Fix submission.csv layout
+ - [ ] a faster resize or more efficient for faster-rcnn
+ - [ ] multi-thread on testing
  - [ ] Test Fater-rcnn + mobilenet performance
  - [ ] Test Faster-rcnn final with channel prunning (ICCV2017)
+ - [ ] Flexible RPRIOFused
+ - [ ] Flexible ROI POOL PARAM IN IPLUGIN, for example: 
+ layer {
+  name: "roi_pool5"
+  type: "ROIPooling"
+  bottom: "conv5_3"
+  bottom: "rois"
+  top: "pool5"
+  roi_pooling_param {
+    pooled_w: 7
+    pooled_h: 7
+    spatial_scale: 0.0625 # 1/16
+  }
+}
  
    
