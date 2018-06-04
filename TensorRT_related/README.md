@@ -60,7 +60,7 @@ This file record the tensorRT (trt)errors and bugs that we've met. The purpose o
  - [ ] multi-thread on testing
  - [ ] Test Fater-rcnn + mobilenet performance
  - [ ] Test Faster-rcnn final with channel prunning (ICCV2017)
- - [ ] Flexible RPRIOFused
+ - [ ] Flexible RPRIOFused. For example, #  python_param {    module: 'rpn.proposal_layer'   layer: 'ProposalLayer'    param_str: "'feat_stride': 16"
  - [ ] Flexible ROI POOL PARAM IN IPLUGIN, for example: 
  layer {
   name: "roi_pool5"
