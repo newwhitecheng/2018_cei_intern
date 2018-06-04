@@ -75,4 +75,16 @@ This file record the tensorRT (trt)errors and bugs that we've met. The purpose o
   }
 }
  
-   
+- [ ] sacle data layer in iplugin.  
+layer {
+  name: "scaled_data"
+  type: "Scale"
+  bottom: "data"
+  top: "scaled_data"
+  scale_param {
+    filler {
+      value: 0.017
+    }
+    bias_term: false
+  }
+}
