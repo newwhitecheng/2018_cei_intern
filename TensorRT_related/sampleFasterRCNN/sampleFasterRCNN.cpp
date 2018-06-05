@@ -647,6 +647,7 @@ std::vector<int> nms(std::vector<std::pair<float, int> >& score_index, float* bb
 
 int main(int argc, char** argv)
 {
+<<<<<<< HEAD
 	// create a GIE model from the caffe model and serialize it to a stream
 	PluginFactory pluginFactory;
 	IHostMemory *gieModelStream{ nullptr };
@@ -656,19 +657,35 @@ int main(int argc, char** argv)
 	const char *cache_path = "/home/fanzc/TensorRT-3.0.4 (2)/data/faster-rcnn/engine";
 	std::stringstream searilizedengine;
 	caffeToGIEModel("faster_rcnn_test_iplugin.prototxt",
+=======
+		// create a GIE model from the caffe model and serialize it to a stream
+		PluginFactory pluginFactory;
+		IHostMemory *gieModelStream{ nullptr };
+		// batch size
+		const int N = 1;
+        const int M = 20000;
+		/*char *cache_path = "/home/fanzc/TensorRT-3.0.4 (2)/data/faster-rcnn/engine";
+		std::stringstream searilizedengine;*/
+		caffeToGIEModel("faster_rcnn_test_iplugin.prototxt",
+>>>>>>> fc23ce7914e36072be9c4d3c2a016b65b394e18f
 		"vgg16_faster_rcnn_iter_80000.caffemodel",
 		std::vector < std::string > { OUTPUT_BLOB_NAME0, OUTPUT_BLOB_NAME1, OUTPUT_BLOB_NAME2 },
 		N, &pluginFactory, &gieModelStream);
 
+<<<<<<< HEAD
 	pluginFactory.destroyPlugin();
 	std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018");
 //	std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/ILSVRC2013_DET_val2");
 //        std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/ILSVRC2013_DET_val2");
+=======
+		pluginFactory.destroyPlugin();
+    	std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018");
+        //std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/ILSVRC2013_DET_val2");
+>>>>>>> fc23ce7914e36072be9c4d3c2a016b65b394e18f
         std::sort(imageList.begin(),imageList.end());
-        //for(int i=0;i<imageList.size();i++)
-        	//cout<<imageList[i]<<endl;
         std::vector<PPM> ppms(N);
         // deserialize the engine 
+<<<<<<< HEAD
 	IRuntime* runtime = createInferRuntime(gLogger);
 	/*searilizedengine.write((const char*)gieModelStream->data(), gieModelStream->size());
         std::ofstream outfile;
@@ -676,6 +693,15 @@ int main(int argc, char** argv)
         outfile << searilizedengine.rdbuf();
         outfile.close();*/
 	ICudaEngine* engine = runtime->deserializeCudaEngine(gieModelStream->data(), gieModelStream->size(), &pluginFactory);
+=======
+		IRuntime* runtime = createInferRuntime(gLogger);
+		/*searilizedengine.write((const char*)gieModelStream->data(), gieModelStream->size());
+		std::ofstream outfile;
+		outfile.open(cache_path);
+		outfile << searilizedengine.rdbuf();
+		outfile.close();*/
+		ICudaEngine* engine = runtime->deserializeCudaEngine(gieModelStream->data(), gieModelStream->size(), &pluginFactory);
+>>>>>>> fc23ce7914e36072be9c4d3c2a016b65b394e18f
 /*
 char *cache_path = "/home/fanzc/TensorRT-3.0.4 (2)/data/faster-rcnn/engine";
 std::ifstream cache(cache_path);
@@ -689,8 +715,13 @@ char* modelmem = malloc(modelsize);
 giemodelstream.read(modelmem,modelsize);
 ICudaEngine* engine = runtime->deserializeCudaEngine(modelmem, modelsize, &pluginFactory);
 */
+<<<<<<< HEAD
 	IExecutionContext *context = engine->createExecutionContext();
 	float* data = new float[N*INPUT_C*INPUT_H*INPUT_W];
+=======
+		IExecutionContext *context = engine->createExecutionContext();
+		float* data = new float[N*INPUT_C*INPUT_H*INPUT_W];
+>>>>>>> fc23ce7914e36072be9c4d3c2a016b65b394e18f
 	 // host memory for outputs 
         float* rois = new float[N * nmsMaxOut * 4];
         float* bboxPreds = new float[N * nmsMaxOut * OUTPUT_BBOX_SIZE];
@@ -699,10 +730,17 @@ ICudaEngine* engine = runtime->deserializeCudaEngine(modelmem, modelsize, &plugi
          // predicted bounding boxes
         float* predBBoxes = new float[N * nmsMaxOut * OUTPUT_BBOX_SIZE];
 
+<<<<<<< HEAD
 	float imInfo[N * 3]; // input im_info	
 	//std::random_shuffle(imageList.begin(), imageList.end(), [](int i) {return rand() % i; });
 	assert(ppms.size() <= imageList.size());
 	for(int pn = 0; pn<M; ++pn)
+=======
+		float imInfo[N * 3]; // input im_info	
+		//std::random_shuffle(imageList.begin(), imageList.end(), [](int i) {return rand() % i; });
+		assert(ppms.size() <= imageList.size());
+		for(int pn = 0; pn<M; ++pn)
+>>>>>>> fc23ce7914e36072be9c4d3c2a016b65b394e18f
         {
            stringstream stream;
            stream << pn;
@@ -783,7 +821,11 @@ ICudaEngine* engine = runtime->deserializeCudaEngine(modelmem, modelsize, &plugi
 				        //writePPMFileWithBBox(storeName, ppms[i], b);
 					std::ofstream result_file;
                                         result_file.open("submission.csv", std::ios_base::app);
+<<<<<<< HEAD
                                         result_file << string_temp << " " << c <<  " " <<  scores[idx*OUTPUT_CLS_SIZE + c]  <<  " " << b.x1*ppms[i].w/224  << " " <<  b.y1*ppms[i].h/224 << " " <<  b.x2*ppms[i].w/224 << " " <<  b.y2*ppms[i].h/224 << std::endl;
+=======
+                                        result_file << ppms[i].fileName << " " << c <<  " " <<  scores[idx*OUTPUT_CLS_SIZE + c]  <<  " " << b.x1*ppms[i].w/224  << " " <<  b.y1*ppms[i].h/224 << " " <<  b.x2*ppms[i].w/224 << " " <<  b.y2*ppms[i].h/224 << std::endl;
+>>>>>>> fc23ce7914e36072be9c4d3c2a016b65b394e18f
 
 			        }
 		        }
