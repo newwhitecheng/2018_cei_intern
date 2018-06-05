@@ -76,33 +76,177 @@ struct BBox
 {
 	float x1, y1, x2, y2;
 };
+typedef struct {
+	int w;
+	int h;
+	int c;
+	int step;
+	float *data;
+} image;
 
+image make_empty_image(int w, int h, int c)
+{
+	image out;
+	out.data = 0;
+	out.h = h;
+	out.w = w;
+	out.c = c;
+	return out;
+}
+
+image make_image(int w, int h, int c)
+{
+	image out = make_empty_image(w, h, c);
+	out.data = (float*)calloc(h*w*c, sizeof(float));
+	return out;
+}
+
+void ipl_into_image(IplImage* src, image im)
+{
+	unsigned char *data = (unsigned char *)src->imageData;
+	int h = src->height;
+	int w = src->width;
+	int c = src->nChannels;
+	int step = src->widthStep;
+	int i, j, k;
+
+	for (i = 0; i < h; ++i) {
+		for (k = 0; k < c; ++k) {
+			for (j = 0; j < w; ++j) {
+				im.data[k*w*h + i*w + j] = data[i*step + j*c + k] / 255.;
+			}
+		}
+	}
+}
+image ipl_to_image(IplImage* src)
+{
+	int h = src->height;
+	int w = src->width;
+	int c = src->nChannels;
+	image out = make_image(w, h, c);
+	ipl_into_image(src, out);
+	out.step = src->widthStep;
+	return out;
+}
+static float get_pixel(image m, int x, int y, int c)
+{
+	assert(x < m.w && y < m.h && c < m.c);
+	return m.data[c*m.h*m.w + y*m.w + x];
+}
+void free_image(image m)
+{
+	if (m.data) {
+		free(m.data);
+	}
+}
+
+static void set_pixel(image m, int x, int y, int c, float val)
+{
+	if (x < 0 || y < 0 || c < 0 || x >= m.w || y >= m.h || c >= m.c) return;
+	assert(x < m.w && y < m.h && c < m.c);
+	m.data[c*m.h*m.w + y*m.w + x] = val;
+}
+static void add_pixel(image m, int x, int y, int c, float val)
+{
+	assert(x < m.w && y < m.h && c < m.c);
+	m.data[c*m.h*m.w + y*m.w + x] += val;
+}
+image resize_image(image im, int w, int h)
+{
+	image resized = make_image(w, h, im.c);
+	resized.step = im.c * w;
+	image part = make_image(w, im.h, im.c);
+	int r, c, k;
+	float w_scale = (float)(im.w - 1) / (w - 1);
+	float h_scale = (float)(im.h - 1) / (h - 1);
+	for (k = 0; k < im.c; ++k) {
+		for (r = 0; r < im.h; ++r) {
+			for (c = 0; c < w; ++c) {
+				float val = 0;
+				if (c == w - 1 || im.w == 1) {
+					val = get_pixel(im, im.w - 1, r, k);
+				}
+				else {
+					float sx = c*w_scale;
+					int ix = (int)sx;
+					float dx = sx - ix;
+					val = (1 - dx) * get_pixel(im, ix, r, k) + dx * get_pixel(im, ix + 1, r, k);
+				}
+				set_pixel(part, c, r, k, val);
+			}
+		}
+	}
+	for (k = 0; k < im.c; ++k) {
+		for (r = 0; r < h; ++r) {
+			float sy = r*h_scale;
+			int iy = (int)sy;
+			float dy = sy - iy;
+			for (c = 0; c < w; ++c) {
+				float val = (1 - dy) * get_pixel(part, c, iy, k);
+				set_pixel(resized, c, r, k, val);
+			}
+			if (r == h - 1 || im.h == 1) continue;
+			for (c = 0; c < w; ++c) {
+				float val = dy * get_pixel(part, c, iy + 1, k);
+				add_pixel(resized, c, r, k, val);
+			}
+		}
+	}
+
+	free_image(part);
+	return resized;
+}
 std::string locateFile(const std::string& input)
 {
-    std::vector<std::string> dirs{"data/samples/faster-rcnn/", "data/faster-rcnn/","/home/nvidia/workspace/Images_2018_ppm_reshape/","/home/nvidia/workspace/Images_2018/","/home/nvidia/workspace/Images_2018_reshape/"};
+    std::vector<std::string> dirs{"data/samples/faster-rcnn/", "data/faster-rcnn/","/home/nvidia/workspace/Images_2018_ppm_reshape/","/home/nvidia/workspace/Images_2018/","/home/nvidia/workspace/ILSVRC2013_DET_val2/"};
     return locateFile(input, dirs);
 }
 void jpg2ppm(const std::string& filename, PPM& ppm)
 {
- ppm.fileName = filename;
- cv::Mat jpg;
- //std::ifstream infile(locateFile(filename), std::ifstream::binary);
- //std::string imageinput = filepath+filename;
- //cv::Mat rawjpg = imread(imageinput, -1);
- cv::Mat rawjpg = imread(locateFile(filename), -1);
- ppm.h = rawjpg.rows;
- ppm.w = rawjpg.cols;
- cv::resize(rawjpg, jpg, cv::Size(224, 224));
- for(int j = 0; j<jpg.rows; j++){
-  uint8_t *data = jpg.ptr<uchar>(j);
-  for(int i = 0; i<jpg.cols ; i++)
-  {
-   ppm.buffer[(j*jpg.rows+i)*3] = data[3*i+2];
-   ppm.buffer[(j*jpg.rows+i)*3+1] = data[3*i+1];
-   ppm.buffer[(j*jpg.rows+i)*3+2] = data[3*i+0];
-  }
- }
- return;
+  ppm.fileName = filename;
+	IplImage* imgSrc = cvLoadImage(locateFile(filename).c_str(), -1);
+	ppm.h = imgSrc->height;
+	ppm.w = imgSrc->width;
+	image tmp = ipl_to_image(imgSrc);
+	int new_memory = -1;
+	image resized = resize_image(tmp, INPUT_H,  INPUT_W);
+	if (imgSrc->height * imgSrc->width < INPUT_H * INPUT_W)
+	{
+    cvReleaseData(imgSrc);
+		imgSrc->imageData = (char*)calloc(INPUT_H * INPUT_W * INPUT_C, sizeof(char));
+		new_memory = 1;
+	}
+	imgSrc->height = resized.h;
+	imgSrc->width = resized.w;
+	imgSrc->nChannels = resized.c;
+	imgSrc->widthStep = resized.c * resized.w;
+	int m,  j,  k;
+	for (m = 0; m < resized.h; ++m)
+	{
+		for (k = 0; k < resized.c; ++k)
+		{
+			for (j = 0; j < resized.w; ++j)
+			{
+				imgSrc->imageData[m * imgSrc->widthStep + j * imgSrc->nChannels  + k] = resized.data[k * resized.w * resized.h + m * resized.w + j] * 255;
+			}
+		}
+	}
+	Mat jpg = cvarrToMat(imgSrc);
+	for (int j = 0; j < jpg.rows; j++) {
+		uint8_t *data = jpg.ptr<uchar>(j);
+		for (int i = 0; i < jpg.cols; i++)
+		{
+			ppm.buffer[(j * jpg.rows + i) * 3] = data[3 * i + 2];
+			ppm.buffer[(j * jpg.rows + i) * 3 + 1] = data[3 * i + 1];
+			ppm.buffer[(j * jpg.rows + i) * 3 + 2] = data[3 * i + 0];
+		}
+	}
+	if (new_memory == 1)
+		free(imgSrc->imageData);
+  free_image(tmp);
+	free_image(resized);
+  cvReleaseImage(&imgSrc);
+	return;
 }
 
 
@@ -196,7 +340,7 @@ void caffeToGIEModel(const std::string& deployFile,			// name for caffe prototxt
 	const IBlobNameToTensor* blobNameToTensor = parser->parse(locateFile(deployFile).c_str(),
 		locateFile(modelFile).c_str(),
 		*network,
-		nvinfer1::DataType::kFLOAT);
+		nvinfer1::DataType::kHALF);
 	std::cout << "End parsing model..." << std::endl;
 	// specify which tensors are outputs
 	for (auto& s : outputs)
@@ -363,8 +507,8 @@ public:
 			assert(nbWeights == 0 && weights == nullptr);
 			mPluginRPROI = std::unique_ptr<INvPlugin, decltype(nvPluginDeleter)>
 				(createFasterRCNNPlugin(featureStride, preNmsTop, nmsMaxOut, iouThreshold, minBoxSize, spatialScale,
-					DimsHW(poolingH, poolingW), Weights{ nvinfer1::DataType::kFLOAT, anchorsRatios, anchorsRatioCount },
-					Weights{ nvinfer1::DataType::kFLOAT, anchorsScales, anchorsScaleCount }), nvPluginDeleter);
+					DimsHW(poolingH, poolingW), Weights{ nvinfer1::DataType::kHALF, anchorsRatios, anchorsRatioCount },
+					Weights{ nvinfer1::DataType::kHALF, anchorsScales, anchorsScaleCount }), nvPluginDeleter);
 			return mPluginRPROI.get();
 		}
 		else
@@ -508,45 +652,70 @@ int main(int argc, char** argv)
 	IHostMemory *gieModelStream{ nullptr };
 	// batch size
 	const int N = 1;
-        const int M = 200;
+        const int M = 4599;
+	const char *cache_path = "/home/fanzc/TensorRT-3.0.4 (2)/data/faster-rcnn/engine";
+	std::stringstream searilizedengine;
 	caffeToGIEModel("faster_rcnn_test_iplugin.prototxt",
 		"vgg16_faster_rcnn_iter_80000.caffemodel",
 		std::vector < std::string > { OUTPUT_BLOB_NAME0, OUTPUT_BLOB_NAME1, OUTPUT_BLOB_NAME2 },
 		N, &pluginFactory, &gieModelStream);
 
 	pluginFactory.destroyPlugin();
-	// read a random sample image
-	//srand(unsigned(time(nullptr)));
-	// available images 
-        //std::vector<std::string> imageList = { "000456.ppm",  "000542.ppm",  "001150.ppm", "001763.ppm", "004545.ppm" };
-	//std::vector<std::string> imageList = {"LPIRC2018_test_00000001.ppm","LPIRC2018_test_00000002.ppm","LPIRC2018_test_00000003.ppm","LPIRC2018_test_00000004.ppm","LPIRC2018_test_00000005.ppm"};
-//	std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018");
-        std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018");
+	std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/Images_2018");
+//	std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/ILSVRC2013_DET_val2");
+//        std::vector<std::string> imageList=getFiles("/home/nvidia/workspace/ILSVRC2013_DET_val2");
         std::sort(imageList.begin(),imageList.end());
         //for(int i=0;i<imageList.size();i++)
         	//cout<<imageList[i]<<endl;
         std::vector<PPM> ppms(N);
         // deserialize the engine 
 	IRuntime* runtime = createInferRuntime(gLogger);
+	/*searilizedengine.write((const char*)gieModelStream->data(), gieModelStream->size());
+        std::ofstream outfile;
+        outfile.open(cache_path);
+        outfile << searilizedengine.rdbuf();
+        outfile.close();*/
 	ICudaEngine* engine = runtime->deserializeCudaEngine(gieModelStream->data(), gieModelStream->size(), &pluginFactory);
-
+/*
+char *cache_path = "/home/fanzc/TensorRT-3.0.4 (2)/data/faster-rcnn/engine";
+std::ifstream cache(cache_path);
+std:stringstream giemodelstream;
+giemodelstream.seekg(0,giemodelstream.beg);
+giemodelstream<<cache.rdbuf();
+giemodelstream.seekg(0,giemodelstream.end);
+const int modelsize = giemodelstream.tellg();
+giemodelstream.seekg(0,giemodelstream.beg);
+char* modelmem = malloc(modelsize);
+giemodelstream.read(modelmem,modelsize);
+ICudaEngine* engine = runtime->deserializeCudaEngine(modelmem, modelsize, &pluginFactory);
+*/
 	IExecutionContext *context = engine->createExecutionContext();
+	float* data = new float[N*INPUT_C*INPUT_H*INPUT_W];
+	 // host memory for outputs 
+        float* rois = new float[N * nmsMaxOut * 4];
+        float* bboxPreds = new float[N * nmsMaxOut * OUTPUT_BBOX_SIZE];
+        float* clsProbs = new float[N * nmsMaxOut * OUTPUT_CLS_SIZE];
+
+         // predicted bounding boxes
+        float* predBBoxes = new float[N * nmsMaxOut * OUTPUT_BBOX_SIZE];
 
 	float imInfo[N * 3]; // input im_info	
 	//std::random_shuffle(imageList.begin(), imageList.end(), [](int i) {return rand() % i; });
 	assert(ppms.size() <= imageList.size());
 	for(int pn = 0; pn<M; ++pn)
         {
+           stringstream stream;
+           stream << pn;
+		       string string_temp = stream.str();
                 for (int i = 0; i < N; ++i)
 	        {
 		        //readPPMFile(imageList[i+pn], ppms[i]);
 		        jpg2ppm(imageList[i+pn], ppms[i]);
-		        imInfo[i * 3] = float(ppms[i].h);   // number of rows
-		        imInfo[i * 3 + 1] = float(ppms[i].w); // number of columns
+		        imInfo[i * 3] = 224.0 ;   // number of rows
+		        imInfo[i * 3 + 1] = 224.0 ; // number of columns
 		        imInfo[i * 3 + 2] = 1;         // image scale
 	        }
                 
-	        float* data = new float[N*INPUT_C*INPUT_H*INPUT_W];
 	        // pixel mean used by the Faster R-CNN's author
 	        float pixelMean[3]{ 102.9801f, 115.9465f, 122.7717f }; // also in BGR order
 	        for (int i = 0, volImg = INPUT_C*INPUT_H*INPUT_W; i < N; ++i)
@@ -559,14 +728,6 @@ int main(int argc, char** argv)
 		        }
 	        }
 
-
-	        // host memory for outputs 
-	        float* rois = new float[N * nmsMaxOut * 4];
-	        float* bboxPreds = new float[N * nmsMaxOut * OUTPUT_BBOX_SIZE];
-        	float* clsProbs = new float[N * nmsMaxOut * OUTPUT_CLS_SIZE];
-
-        	// predicted bounding boxes
-        	float* predBBoxes = new float[N * nmsMaxOut * OUTPUT_BBOX_SIZE];
 
         	// run inference
         	doInference(*context, data, imInfo, bboxPreds, clsProbs, rois, N);
@@ -617,8 +778,12 @@ int main(int argc, char** argv)
 					//<< " (Result stored in " << storeName << ")." << std::endl;
 
 				        BBox b{ bbox[idx*OUTPUT_BBOX_SIZE + c * 4], bbox[idx*OUTPUT_BBOX_SIZE + c * 4 + 1], bbox[idx*OUTPUT_BBOX_SIZE + c * 4 + 2], bbox[idx*OUTPUT_BBOX_SIZE + c * 4 + 3] };
-                                    std::cout  << ppms[i].fileName << " " << c <<  " " <<  scores[idx*OUTPUT_CLS_SIZE + c]  <<  " " << b.x1*ppms[i].w/224  << " " <<  b.y1*ppms[i].h/224 << " " <<  b.x2*ppms[i].w/224 << " " <<  b.y2*ppms[i].h/224 << std::endl;
+                                
+                                    std::cout  << string_temp << " " << c <<  " " <<  scores[idx*OUTPUT_CLS_SIZE + c]  <<  " " << b.x1*ppms[i].w/224  << " " <<  b.y1*ppms[i].h/224 << " " <<  b.x2*ppms[i].w/224 << " " <<  b.y2*ppms[i].h/224 << std::endl;
 				        //writePPMFileWithBBox(storeName, ppms[i], b);
+					std::ofstream result_file;
+                                        result_file.open("submission.csv", std::ios_base::app);
+                                        result_file << string_temp << " " << c <<  " " <<  scores[idx*OUTPUT_CLS_SIZE + c]  <<  " " << b.x1*ppms[i].w/224  << " " <<  b.y1*ppms[i].h/224 << " " <<  b.x2*ppms[i].w/224 << " " <<  b.y2*ppms[i].h/224 << std::endl;
 
 			        }
 		        }
