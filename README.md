@@ -7,13 +7,13 @@
 # Projects
 1. Structure Learning
     ```Shell 
-    # The interns work are this project are
+    # The interns work on this project are
     Ma Siyuan
     ```
     The detail is in `painting` folder.
 2. Spot forged artwork
     ```Shell 
-    # The interns work are this project are
+    # The interns work on this project are
     Li Zichao
     ```
     The detail is in `structure_learning` folder.
