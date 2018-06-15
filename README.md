@@ -10,11 +10,13 @@
     # The interns work are this project are
     Ma Siyuan
     ```
+    The detail is in `painting` folder.
 2. Spot forged artwork
     ```Shell 
     # The interns work are this project are
     Li Zichao
     ```
+    The detail is in `structure_learning` folder.
     
  # TODO
  - [x] Complete LPIRC 2018 competition
