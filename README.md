@@ -6,7 +6,7 @@
 ## Projects
 1. Manifold ball augmentation
     ```Shell 
-    # his project is lead by Jingchi
+    # this project is led by Jingchi
     Intern: Zhang Jingyang
     ```
 2. Structure Learning
