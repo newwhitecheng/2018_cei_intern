@@ -2,21 +2,35 @@
 ## This repository serve as a record for those do internship at Duke computational evolutionary intellegence laboratory. 
 
 ## Internship students are
-王博宇(wang boyu), 张静阳(Zhang Jingyang), 樊子辰(Fan Zichen), 黄远钧(Huang Yuanjun), 李子超(Li Zichao), 李子儒(Li Ziru
-刘居正(Liu Juzheng), 李石宇(Li Shiyu), 胡豪竞(Hu Haojing), 马思远(Ma Siyuan), 郭旭阳(Guo Xuyang)
+王博宇(Wang Boyu), 张静阳(Zhang Jingyang), 李子超(Li Zichao), 刘居正(Liu Juzheng), 李子儒(Li Ziru), 李石宇(Li Shiyu), 胡豪竞(Hu Haojing), 马思远(Ma Siyuan), 郭旭阳(Guo Xuyang), 樊子辰(Fan Zichen), 黄远钧(Huang Yuanjun)
 ## Projects
-1. Structure Learning
+1. Manifold ball augmentation
+    ```Shell 
+    # his project is lead by Jingchi
+    Intern: Zhang Jingyang
+    ```
+2. Structure Learning
     ```Shell 
     # The interns work on this project are
-    Ma Siyuan
+    Ma Siyuan, Guo Xuyang
     ```
     The detail is in `painting` folder.
-2. Spot forged artwork
+3. Spot forged artwork
     ```Shell 
     # The interns work on this project are
     Li Zichao
     ```
     The detail is in `structure_learning` folder.
+4. Information theory related
+    ```Shell 
+    # The interns work on this project are
+    Wang Boyu, Li Shiyu
+    ```
+5. Privacy preserving 
+    ```Shell 
+    # The interns work on this project are
+    Liu Juzheng
+    ```
 ## Logistic
 use `report_template.pptx` to write report
 
