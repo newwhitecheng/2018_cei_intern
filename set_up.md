@@ -5,7 +5,7 @@
 
 3. Run 
  ```Shell 
-    vncserver -geometry 2560x1440****
+    vncserver -geometry 2560x1440
  ```
 to open a new prot of your own. (“2560x1440” is the resolution of your monitor, 'x' is the lowecase letter 'x')
 
