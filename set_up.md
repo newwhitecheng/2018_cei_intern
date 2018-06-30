@@ -6,7 +6,7 @@
 3. Run 
  ```Shell 
     vncserver -geometry ****x****
-    ```
+ ```
 to open a new prot of your own. (****x**** is the resolution of your monitor, 'x' is the lowecase letter 'x')
 
 4. Open VNC on you computer, enter IP and port number as 10.236.176.23:* (* is your port number)
