@@ -15,13 +15,13 @@
     Ma Siyuan, Guo Xuyang
     ```
     The detail is in `structure_learning` folder.
-3. Spot artwork forgeries - Use machine learning method to spot where which paintings are forgeries.
+3. Spot artwork forgeries - Use machine learning method to spot which paintings are forgeries.
     ```Shell 
     # The interns working on this project are
     Li Zichao, Kevin
     ```
     The detail is in `painting` folder.
-4. Information theory related - Use information theory to open the blackbox of DNN.
+4. Information theory related - Use information theory to explain the blackbox of DNN.
     ```Shell 
     # The interns working on this project are
     Wang Boyu, Li Shiyu
