@@ -34,7 +34,7 @@
     The detail is in `privacy_preserving` folder.
 6. Study the code of LPIRC track 2
     ```Shell
-    # The interns participated LPIRC, should study the code and know how they optimized they submission
+    # The interns participated LPIRC should study thier submitted code and know how they do optimization
     # Done within 1 month. 
     ```
 ## Logistic
