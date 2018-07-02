@@ -20,6 +20,14 @@ to open a new prot of your own. (“2560x1440” is the resolution of your monit
 
 ## data server set up
 1. Make your local mount point. For example ‘mkdir ~/share’. This only needs to be done once.
-2. Mount the fileserver using command ‘sudo mount -o username='WIN\[YourDukeNetID]',password='[YourDukeNetIDPassword]',uid=’[YourLinuxLocalUsername]’,gid=’[YourLinuxLocalGroupname]’ //10.148.54.21/Share  [mount point]’. Make sure to replace all the [xxx] placeholders accordingly and don’t remove the single quote marks.
+2. Mount the fileserver using command 
+```Shell
+sudo mount -o username='WIN\[YourDukeNetID]',password='[YourDukeNetIDPassword]',uid=’[YourLinuxLocalUsername]’,gid=’[YourLinuxLocalGroupname]’ //10.148.54.21/Share  [mount point]
+```
+Make sure to replace all the [xxx] placeholders accordingly and don’t remove the single quote marks.
 3. Now you should be able to use it just as a local disk.
-Note that it is a good security practice that you clear your command history afterwards by ‘history -c’, since your DukeNetID and its password is stored in your command history as plain text after step 2.
+Note that it is a good security practice that you clear your command history afterwards by 
+```Shell
+history -c
+```
+since your DukeNetID and its password is stored in your command history as plain text after step 2.
