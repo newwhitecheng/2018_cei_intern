@@ -4,12 +4,12 @@
 ## Internship students are
 王博宇(Wang Boyu), 张静阳(Zhang Jingyang), 李子超(Li Zichao), 刘居正(Liu Juzheng), 李子儒(Li Ziru), 李石宇(Li Shiyu), 胡豪竞(Hu Haojing), 马思远(Ma Siyuan), 郭旭阳(Guo Xuyang), 樊子辰(Fan Zichen), 黄远钧(Huang Yuanjun), Kevin, 鄭琪霖
 ## Projects
-1. Manifold ball augmentation - a augmentation project to enhance robustness
+1. Manifold ball augmentation - an augmentation project to enhance robustness
     ```Shell 
     # this project is led by Jingchi
     Intern: Zhang Jingyang
     ```
-2. Structure Learning - Design a efficient learning method to automaticlly adjust model structure.
+2. Structure Learning - Design an efficient learning method to automaticlly adjust model structure.
     ```Shell 
     # The interns working on this project are
     Ma Siyuan, Guo Xuyang
