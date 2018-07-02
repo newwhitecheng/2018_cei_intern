@@ -32,7 +32,11 @@
     Liu Juzheng
     ```
     The detail is in `privacy_preserving` folder.
-    
+6. Study the code of LPIRC track 2
+    ```Shell
+    # The interns participated LPIRC, should study the code and know how they optimized they submission
+    # Done within 1 month. 
+    ```
 ## Logistic
 use `report_template.pptx` to write report
 
@@ -44,4 +48,3 @@ use TODO of `README.md` in each project folder to track your progress
  - [ ] start writing paper
  - [ ] done experiment 
  - [ ] submit paper
-
