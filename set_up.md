@@ -1,4 +1,4 @@
-# This markdown file teach you how to set up everything you need in CEI lab
+# This markdown file teach you how to set up everything you need at CEI lab
 ## VNC set up
 1. Download VNC viewer and install it
 
