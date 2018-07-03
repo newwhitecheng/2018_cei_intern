@@ -2,7 +2,21 @@
 ## This repository serve as a record for those do internship at Duke computational evolutionary intellegence laboratory. 
 
 ## Internship students are
-王博宇(Wang Boyu), 张静阳(Zhang Jingyang), 李子超(Li Zichao), 刘居正(Liu Juzheng), 李子儒(Li Ziru), 李石宇(Li Shiyu), 胡豪竞(Hu Haojing), 马思远(Ma Siyuan), 郭旭阳(Guo Xuyang), 樊子辰(Fan Zichen), 黄远钧(Huang Yuanjun), Kevin, 鄭琪霖
+1. 王博宇(Wang Boyu)
+2. 张静阳(Zhang Jingyang) 
+3. 李子超(Li Zichao) 
+4. 刘居正(Liu Juzheng) 
+5. 李子儒(Li Ziru)
+6. 李石宇(Li Shiyu)
+7. 胡豪竞(Hu Haojing)
+8. 马思远(Ma Siyuan)
+9. 郭旭阳(Guo Xuyang)
+10. 樊子辰(Fan Zichen)
+11. 黄远钧(Huang Yuanjun)
+12. 郑琪霖(Zheng Qilin)
+13. Kevin
+14. Patrick Yu
+
 ## Projects
 1. Manifold ball augmentation - an augmentation project to enhance robustness
     ```Shell 
