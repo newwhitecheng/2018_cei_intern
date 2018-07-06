@@ -1,5 +1,6 @@
 
 #Toy example of basic Four-node Decentralized Neural Network. Currently in progress as of 7/5/18 (does not work YET)
+#by Patrick
 
 '''TBD: 
 1. Gradient limiting factor Theta_U,Theta_D (for upload/download); 
