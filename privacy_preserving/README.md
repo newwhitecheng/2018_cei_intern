@@ -9,4 +9,5 @@
  - [ ] Write experiment (800 words) (deadline: 7/20)
  
   ## TODO for 4th week
- - [ ]
+ - [ ] write a 4 pages paper including related work, proposed method and experiments.
+
