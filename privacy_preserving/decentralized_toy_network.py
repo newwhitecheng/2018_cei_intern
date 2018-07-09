@@ -134,8 +134,7 @@ for i in range(3000 // sz):
             print("accuracy for Node: ", cnode,  "  is: ",train_acc[cnode],  "  at epoch: ", i)
 
         #upload trained weights to neighbors B, C
-        g_W1[cnode], g_W2[cnode], g_W3[cnode], 
-        g_b1[cnode], g_b2[cnode], g_b3[cnode] = opt.compute_gradients(loss=loss[cnode], 
+        g_W1[cnode], g_W2[cnode], g_W3[cnode], g_b1[cnode], g_b2[cnode], g_b3[cnode] = opt.compute_gradients(loss=loss[cnode], 
                                                                       var_list=[W1[cnode], W2[cnode], W3[cnode],
                                                                                 b1[cnode], b2[cnode], b3[cnode]])
         
