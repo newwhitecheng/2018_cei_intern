@@ -1,6 +1,7 @@
 # Folder structure
 
 1. The related papers are at `reference.bib`
+2. keyword: abnormal detection, sparse coding, autoencoder
 
  # TODO
  - [ ] back up all data in data server
