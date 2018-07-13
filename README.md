@@ -26,25 +26,25 @@
     ```
 2. Structure Learning - Design an efficient learning method to automaticlly adjust model structure.
     ```Shell 
-    # The people working on this project are
-    Dave Cheng, Guo Xuyang, Huang Yuanjun, Ma Siyuan
+    #  The people working on this project are
+    Dave Cheng. Intern: Guo Xuyang, Huang Yuanjun, Ma SiyTheuan
     ```
     The detail is in `structure_learning` folder.
 3. Spot artwork forgeries - Use machine learning method to spot which paintings are forgeries.
     ```Shell 
-    # The interns working on this project are
-    Dave Cheng, Li Zichao, Kevin, 凌志
+    #  The people working on this project are
+    Dave Cheng. Intern: Li Zichao, Kevin, 凌志
     ```
     The detail is in `painting` folder.
 4. Information theory related - Use information theory to explain the blackbox of DNN.
     ```Shell 
-    # The interns working on this project are
-    Dave Cheng, Wang Boyu, Li Shiyu
+    #  The people working on this project are
+    Dave Cheng. Intern: Wang Boyu, Li Shiyu
     ```
 5. Privacy preserving - Privacy preserved collaborative learning.
     ```Shell 
     # The people working on this project are
-    Dave Cheng, Patrick Yu, Zheng Qilin
+    Dave Cheng. Intern: Patrick Yu, Zheng Qilin
     ```
     The detail is in `privacy_preserving` folder.
 6. Study the code of LPIRC track 2
