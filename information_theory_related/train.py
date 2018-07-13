@@ -40,7 +40,7 @@ def train_epoch(epoch, args, model, data_loader, optimizer):
             print('{}\tTrain Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 pid, epoch, batch_idx * len(data), len(data_loader.dataset),
                 100. * batch_idx / len(data_loader), loss.item()))
-        torch.save(model, 'net1.pkl')
+        torch.save(model.state_dict(), 'model11.pth')
 
 
 def test_epoch(model, data_loader):
