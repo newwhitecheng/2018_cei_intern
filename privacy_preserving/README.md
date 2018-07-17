@@ -9,7 +9,8 @@
  ## TODO for 3rd week (7/16-7/20)
  - [ ] deadline for basic noise (7/17 tues); change to more advanced Covolutional NN
  - [ ] advanced CNN + need to understand/discuss/implement advanced noise method/privacy accountant （7/19 WED）（May need a side discussion of related literature）
- ~~-[ ] try to reverse engineer inputs (7/17 start tues; 7/19 end thurs)~~ (May not have enough time or simply as a side experiment)
+ ~~-[ ] try to reverse engineer inputs (7/17 start tues; 7/19 end thurs) (May not have enough time or simply as a side experiment)～～ 
+ 
  - [ ] experiment with weights (W_ij) (7/19 wed start to 7/20 friday end: 2 days) 
  - [ ] work on CityScape or CIFAR-10 dataset for model (7/21 fri to 7/25 wed; 3 days)
  
