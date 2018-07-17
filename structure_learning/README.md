@@ -13,3 +13,5 @@ Ma Siyuan
  - [ ] new idea for NAS: use CNN as controller, train the target architecture and the controller at the same time
  - [ ] to reduce training time, adopt parameter sharing
  - [ ] new idea: adopt neural-evolution algorithm to train the controller 
+ - [ ] commit curren code (deadline July 20)
+ - [ ] write related work on Latex (deadline July 20)
