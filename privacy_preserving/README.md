@@ -3,14 +3,15 @@
  - [x] Discussed the problem of current methods. (deadline: 7/10)
  - [x] Propose at least two ideas to solve the problem. (deadline: 7/10)
  - [x] Improve the current code (deadline: 7/10)
- - [ ] Finish the code and run experiments for proposed methods(deadline: 7/12)
- - [ ] Ask authors for code, add noise (Laplace, Gaussian, gradient clipping) and try to recreate the epsilon vs. accuracy graph (start: 7/12 thurs end: 7/17 tuesday)
+ - [x] Finish the code and run experiments for proposed methods(deadline: 7/12)
+ - [ ] ~~Ask authors for code~~,   add noise (Laplace, Gaussian, gradient clipping) and try to recreate the epsilon vs. accuracy graph (start: 7/12 thurs end: 7/17 tuesday) (For basic noise only)
  
  ## TODO for 3rd week (7/16-7/20)
- - [ ] deadline for noise (7/17 tues)
+ - [ ] deadline for basic noise (7/17 tues); change to more advanced Covolutional NN
+ - [ ] advanced CNN + need to understand/discuss/implement advanced noise method/privacy accountant （7/19 WED）（May need a side discussion of related literature）
  ~~-[ ] try to reverse engineer inputs (7/17 start tues; 7/19 end thurs)~~ (May not have enough time or simply as a side experiment)
- - [ ] experiment with weights (W_ij) (7/17 tuesday start to 7/19 thursday end: 3 days) 
- - [ ] work on CityScape or CIFAR-10 dataset for model (7/20 fri to 7/24 tues; 3 days)
+ - [ ] experiment with weights (W_ij) (7/19 wed start to 7/20 friday end: 2 days) 
+ - [ ] work on CityScape or CIFAR-10 dataset for model (7/21 fri to 7/25 wed; 3 days)
  
   ## TODO for 4th week (7/23-7/27)
  - [ ] Write experiment (800 words) (deadline: 7/~~20~~ 25 WED)
