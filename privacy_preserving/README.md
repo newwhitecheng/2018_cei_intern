@@ -1,3 +1,5 @@
+Self note: don't overthink issues too much (i.e. one small misunderstanding != everything confused and stuck). Also, just proceed step-by-step, don't fret too much on each step's limitations; they'll be mitigated in later implementation/steps.
+
 ## TODO for 2nd week (7/9-7/13)
  - [x] Write related work (500 words) (deadline: 7/10)
  - [x] Discussed the problem of current methods. (deadline: 7/10)
