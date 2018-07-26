@@ -14,4 +14,4 @@ def saveGif(srcpath, gifpath, interval, scaling = 1.0,  keyword=''):
             img = img.resize((img.width* scaling, img.height* scaling))
             frames.append(np.array(img))
 
-    imageio.mimsave(gifpath, frames, 'GIF', duration = interval)
+    imageio.mimsave(gifpath + '/', frames, 'GIF', duration = interval)

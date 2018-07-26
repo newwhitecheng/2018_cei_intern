@@ -30,3 +30,7 @@ Then run
     stat_data.py
 
 And you will get the animations and the heatmap as well as the activation plot of each feature map in folder 'img_out'
+
+## LICENSE
+This code is modified from https://github.com/artemyk/ibsgd
+>Andrew Michael Saxe, Yamini Bansal, Joel Dapello, Madhu Advani, Artemy Kolchinsky, Brendan Daniel Tracey, David Daniel Cox, On the Information Bottleneck Theory of Deep Learning, _ICLR 2018_.

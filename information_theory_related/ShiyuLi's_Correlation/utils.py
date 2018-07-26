@@ -55,6 +55,8 @@ def get_IB_data(ID):
     return trn, tst
 
 def load_MNIST_data():
+    """Load MNIST data based on Keras dataset utils
+    return training set and test set"""
     nb_classes = 10
     (train_images, train_labels), (test_images, test_labels) = keras.datasets.mnist.load_data()
 
@@ -71,6 +73,8 @@ def load_MNIST_data():
     return trn, tst
 
 def load_CIFAR10_data():
+    """Load cifar10 data based on Keras dataset utils
+    return training set and test set"""
     nb_classes = 10
     (train_images, train_labels), (test_images, test_labels) = keras.datasets.cifar10.load_data()
 

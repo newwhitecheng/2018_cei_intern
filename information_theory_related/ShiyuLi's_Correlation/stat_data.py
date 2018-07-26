@@ -24,20 +24,21 @@ cur_dir = "rawdata/%s_%s%s_%s/"%(NET_NAME, DATASET, ACTIVATION, ARCH)
 #Correlation
 epochfile_List = os.listdir(cur_dir)
 epochfile_List.sort(key=lambda x:int(x[-4:]))
-epoch = []
-corr = []
+
 for sample_id in range(10):
     print("********* Processing " + str(sample_id) +" Sample ***************" )
 
     if not os.path.exists("img_out/HM"+str(sample_id)):
         os.makedirs("img_out/HM"+str(sample_id))
+        
+    corr = []
 
     for epochfile in epochfile_List:
         with open(cur_dir + epochfile, 'rb') as f:
             d = pickle.load(f)
         print("Processing " + epochfile)
         epochs = int(epochfile[-4:])
-        epoch.append(epochs)
+        #epoch.append(epochs)
 
         activity = d['data']['activity_tst']
         num_filters = [activity[0].shape[3], activity[1].shape[3]]
@@ -68,6 +69,7 @@ for sample_id in range(10):
             # img = img.resize((img.width * 20, img.height*20))
             # img = draw_epoch_text(img, epochfile)
             # imageio.imsave("img_out/LeNet5_Conv" + str(lndx+1) + epochfile  + '.png', np.array(img))
+   
     print("Drawing Heat Map...")
     for i in range(len(corr)):
         num_filters = [6, 16]

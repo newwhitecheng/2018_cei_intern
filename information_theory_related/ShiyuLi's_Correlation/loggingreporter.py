@@ -43,18 +43,18 @@ class LoggingReporter(keras.callbacks.Callback):
                 self.layerixs.append(lndx)
                 self.layerfuncs.append(K.function(self.model.inputs, [l.output,]))
                 self.layerweights.append(l.kernel)
-        #
-        # input_tensors = [self.model.inputs[0],
-        #                  self.model.sample_weights[0],
-        #                  self.model.targets[0],
-        #                  K.learning_phase()]
-        # # Get gradients of all the relevant layers at once
-        # grads = self.model.optimizer.get_gradients(self.model.total_loss, self.layerweights)
-        # self.get_gradients = K.function(inputs=input_tensors,
-        #                                 outputs=grads)
-        #
-        # # Get cross-entropy loss
-        # self.get_loss = K.function(inputs=input_tensors, outputs=[self.model.total_loss,])
+        
+        input_tensors = [self.model.inputs[0],
+                         self.model.sample_weights[0],
+                         self.model.targets[0],
+                         K.learning_phase()]
+        # Get gradients of all the relevant layers at once
+        grads = self.model.optimizer.get_gradients(self.model.total_loss, self.layerweights)
+        self.get_gradients = K.function(inputs=input_tensors,
+                                        outputs=grads)
+        
+        # Get cross-entropy loss
+        self.get_loss = K.function(inputs=input_tensors, outputs=[self.model.total_loss,])
             
     def on_epoch_begin(self, epoch, logs={}):
         if self.do_save_func is not None and not self.do_save_func(epoch):
@@ -65,38 +65,38 @@ class LoggingReporter(keras.callbacks.Callback):
             # We will log this epoch.  For each batch in this epoch, we will save the gradients (in on_batch_begin)
             # We will then compute means and vars of these gradients
             
-            # self._log_gradients = True
-            # self._batch_weightnorm = []
-            #
-            # self._batch_gradients = [ [] for _ in self.model.layers[1:] ]
-            #
-            # # Indexes of all the training data samples. These are shuffled and read-in in chunks of SGD_BATCHSIZE
-            # ixs = list(range(len(self.trn.X)))
-            # np.random.shuffle(ixs)
-            # self._batch_todo_ixs = ixs
+            self._log_gradients = True
+            self._batch_weightnorm = []
+            
+            self._batch_gradients = [ [] for _ in self.model.layers[1:] ]
+            
+            # Indexes of all the training data samples. These are shuffled and read-in in chunks of SGD_BATCHSIZE
+            ixs = list(range(len(self.trn.X)))
+            np.random.shuffle(ixs)
+            self._batch_todo_ixs = ixs
 
     def on_batch_begin(self, batch, logs={}):
         pass
-        # if not self._log_gradients:
-        #     # We are not keeping track of batch gradients, so do nothing
-        #     return
-        #
-        # Sample a batch
-        # batchsize = self.cfg['SGD_BATCHSIZE']
-        # cur_ixs = self._batch_todo_ixs[:batchsize]
-        # # Advance the indexing, so next on_batch_begin samples a different batch
-        # self._batch_todo_ixs = self._batch_todo_ixs[batchsize:]
-        #
-        # # Get gradients for this batch
-        # inputs = [self.trn.X[cur_ixs,:],  # Inputs
-        #           [1,]*len(cur_ixs),      # Uniform sample weights
-        #           self.trn.Y[cur_ixs,:],  # Outputs
-        #           1                       # Training phase
-        #          ]
-        # for lndx, g in enumerate(self.get_gradients(inputs)):
-        #     # g is gradients for weights of lndx's layer
-        #     oneDgrad = np.reshape(g, -1, 1)                  # Flatten to one dimensional vector
-        #     self._batch_gradients[lndx].append(oneDgrad)
+        if not self._log_gradients:
+            # We are not keeping track of batch gradients, so do nothing
+            return
+        
+        Sample a batch
+        batchsize = self.cfg['SGD_BATCHSIZE']
+        cur_ixs = self._batch_todo_ixs[:batchsize]
+        # Advance the indexing, so next on_batch_begin samples a different batch
+        self._batch_todo_ixs = self._batch_todo_ixs[batchsize:]
+        
+        # Get gradients for this batch
+        inputs = [self.trn.X[cur_ixs,:],  # Inputs
+                  [1,]*len(cur_ixs),      # Uniform sample weights
+                  self.trn.Y[cur_ixs,:],  # Outputs
+                  1                       # Training phase
+                 ]
+        for lndx, g in enumerate(self.get_gradients(inputs)):
+            # g is gradients for weights of lndx's layer
+            oneDgrad = np.reshape(g, -1, 1)                  # Flatten to one dimensional vector
+            self._batch_gradients[lndx].append(oneDgrad)
 
 
     def on_epoch_end(self, epoch, logs={}):
@@ -117,13 +117,13 @@ class LoggingReporter(keras.callbacks.Callback):
         }
         
         for lndx, layerix in enumerate(self.layerixs):
-            # clayer = self.model.layers[layerix]
+            clayer = self.model.layers[layerix]
 
-            # data['weights_norm'].append( np.linalg.norm(K.get_value(clayer.kernel)) )
-            #
-            # stackedgrads = np.stack(self._batch_gradients[lndx], axis=1)
-            # data['gradmean'    ].append( np.linalg.norm(stackedgrads.mean(axis=1)) )
-            # data['gradstd'     ].append( np.linalg.norm(stackedgrads.std(axis=1)) )
+            data['weights_norm'].append( np.linalg.norm(K.get_value(clayer.kernel)) )
+            
+            stackedgrads = np.stack(self._batch_gradients[lndx], axis=1)
+            data['gradmean'    ].append( np.linalg.norm(stackedgrads.mean(axis=1)) )
+            data['gradstd'     ].append( np.linalg.norm(stackedgrads.std(axis=1)) )
 
             if self.cfg['FULL_MI']:
                 data['activity_tst'].append(self.layerfuncs[lndx]([self.full.X,])[0])
@@ -153,5 +153,5 @@ class weightLogging(keras.callbacks.Callback):
             # Don't log this epoch
             return
 
-        # Get overall performance
+        # Save the weight of the epochs
         self.model.save(self.cfg['SAVE_DIR'] + 'epoch000' + epoch + '.h5')
