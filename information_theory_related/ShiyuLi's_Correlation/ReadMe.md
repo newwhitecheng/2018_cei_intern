@@ -14,11 +14,11 @@ _The version annoted is what I'm currently using_
 - imageio
 
 ## Code
-- Utils.py is for loading and preprocessing the datasets
-- loggingreport.py is the callback class which will log the activity during the training
-- CNN_SaveActivation.py construct and train the LeNet5 Network and save the activity to 'rawdata/' directory. **The Log File might be very large (16GB for 400 epochs)**
-- stat_data.py loading the saved log and calculating the correlation, and output pictures and animation file.
-- convertGIF.py create gif animation from a series of pictures.
+- `Utils.py` is for loading and preprocessing the datasets
+- `loggingreport.py` is the callback class which will log the activity during the training
+- `CNN_SaveActivation.py` construct and train the LeNet5 Network and save the activity to 'rawdata/' directory. **The Log File might be very large (16GB for 400 epochs)**
+- `stat_data.py` loading the saved log and calculating the correlation, and output pictures and animation file.
+- `convertGIF.py` create gif animation from a series of pictures.
 
 ## Usage
 First train and log the epochs with
