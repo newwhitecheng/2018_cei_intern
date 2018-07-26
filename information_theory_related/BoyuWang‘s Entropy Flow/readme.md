@@ -25,6 +25,8 @@ Code
 
 `entropy.py`  notes the method to compute entropy of image
 
+ `datasetgenerator.py`  generate dataset for pytorch 
+
 
 Usage
 -
