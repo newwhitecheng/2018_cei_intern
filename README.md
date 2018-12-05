@@ -59,6 +59,6 @@ use TODO of `README.md` in each project folder to track your progress
  - [x] Complete LPIRC 2018 competition
  - [x] each intern decide what to do and propose their plan
  - [x] initial experiment
- - [ ] start writing paper
- - [ ] done experiment 
- - [ ] submit paper
+ - [x] start writing paper
+ - [x] done experiment 
+ - [x] submit paper
