@@ -1,6 +1,6 @@
 # 2018_cei_intern
 ## This repository serve as a record for those do internship at Duke computational evolutionary intellegence laboratory. 
-
+## Dave Cheng is the mentor of these summer interns. 
 ## Internship students are
 1. 王博宇(Wang Boyu)
 2. 张静阳(Zhang Jingyang) 
